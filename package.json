@@ -1,0 +1,12 @@
+{
+  "name": "parkease_backend",
+  "version": "1.0.0",
+  "description": "\"Final project for 9th quadrimester of Software engineering\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Geo290",
+  "license": "ISC"
+}
+  
