@@ -3,31 +3,31 @@ const { genSalt, compare, hash } = require('bcryptjs');
 
 const ClientSchema = new Schema({
     names: {
-        type: String,
+        type: Schema.Types.String,
         required: true
     },
     lastnames: {
-        type: String,
+        type: Schema.Types.String,
         required: true
     },
     email: {
-        type: String,
+        type: Schema.Types.String,
         required: true
     },
     phoneNumber: {
-        type: Number,
+        type: Schema.Types.Number,
         required: true
     },
     birthDay: {
-        type: String,
+        type: Schema.Types.String,
         required: true
     },
     paymenthMethodId: {
-        type: String,
+        type: Schema.Types.String,
         required: true
     },
     password: {
-        type: String,
+        type: Schema.Types.String,
         required: true
     }
 },  { timestamps: true }
