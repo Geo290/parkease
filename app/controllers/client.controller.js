@@ -5,8 +5,13 @@ const clientCtrl = {};
 clientCtrl.signup = async (req, res) => {
     try {
         const data = req.body;
-        const resp = await clientModel.create(data);
+        const client = new clientModel({ data });
+        
+        client.password = await client.encryptPassword(client.password);
+        await client.save();
+
         return res.status(200).json({ message: 'Signed Up successfully' });
+
     } catch (error) {
         return res.status(500).jsn({ message: 'Error while signing up' });
     }
