@@ -10,24 +10,26 @@ const clientCtrl = {};
 clientCtrl.signup = async (req, res) => {
     try {
         const data = req.body;
-        const client = new clientModel({ data });
+        const client = new clientModel(data);
 
         client.password = await client.encryptPassword(client.password);
+
         await client.save();
 
         return res.status(200).json({ message: 'Signed Up successfully' });
 
     } catch (error) {
-        return res.status(500).jsn({ message: 'Error while signing up' });
+        return res.status(500).json({ message: 'Error while signing up' });
     }
 };
 
 clientCtrl.login = async (req, res) => {
     try {
-        const { email, password } = req.params;
+        const { email, password } = req.body;
         const client = await clientModel.findOne({ email: email });
-        const isValidPass = await clientModel.validatePassword(password);
-
+        
+        const isValidPass = await client.validatePassword(password)
+    
         if (!client) {
             return res.status(204).json({ message: 'No items found' });
         }
@@ -60,6 +62,7 @@ clientCtrl.login = async (req, res) => {
         return res.status(200).json({ message: 'Successfully logged in' });
 
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ message: 'Error while logging in' });
     }
 }
