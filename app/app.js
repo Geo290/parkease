@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
-app.use('api/v1/client', clientRoutes);
+app.use('/api/v1/client', clientRoutes);
 
 run()
     .then(() => {
