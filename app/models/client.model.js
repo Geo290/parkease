@@ -22,10 +22,6 @@ const ClientSchema = new Schema({
         type: Schema.Types.String,
         required: true
     },
-    paymenthMethodId: {
-        type: Schema.Types.String,
-        required: true
-    },
     password: {
         type: Schema.Types.String,
         required: true
@@ -33,12 +29,12 @@ const ClientSchema = new Schema({
 },  { timestamps: true }
 );
 
-ClientSchema.method.encryptPassword = async (password) => {
+ClientSchema.methods.encryptPassword = async (password) => {
     const salt = await genSalt(10);
     return hash(password, salt);
 };
 
-ClientSchema.method.validatePassword = (password) => {
+ClientSchema.methods.validatePassword = function (password) {
     return compare(password, this.password);
 };
 
