@@ -4,7 +4,6 @@ const clientModel = require('../models/client.model.js');
 const { sign, verify } = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
-
 const clientCtrl = {};
 
 clientCtrl.signup = async (req, res) => {
