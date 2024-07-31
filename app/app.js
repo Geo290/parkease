@@ -5,6 +5,8 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
 const clientRoutes = require('./routes/client.routes');
+const membershipRoutes = require('./routes/memebership.routes');
+const adminRoutes = require('./routes/admin.routes');
 const { run, stop } = require('./config/db');
 
 const app = express();
@@ -16,6 +18,8 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use('/api/v1/client', clientRoutes);
+app.use('/api/v1/membership', membershipRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 run()
     .then(() => {
