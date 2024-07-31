@@ -1,19 +1,21 @@
 require('dotenv').config();
 
 const clientModel = require('../models/client.model.js');
-const { sign, verify } = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+const { sign } = require('jsonwebtoken');
 
 const clientCtrl = {};
 
 clientCtrl.signup = async (req, res) => {
     try {
         const data = req.body;
+        const email = data.email;
+        const emailAlreadyExits = await clientModel.findOne(email);
+
+        if (emailAlreadyExits) return res.status(409).json({ message: "Email already exists" });
+
         const client = new clientModel(data);
-
         client.password = await client.encryptPassword(client.password);
-
-        await client.save();
+        await client.save();    
 
         return res.status(200).json({ message: 'Signed Up successfully' });
 
@@ -68,7 +70,7 @@ clientCtrl.login = async (req, res) => {
 }
 
 clientCtrl.logout = async (req, res) => {
-    res.status(200).clearCookie('access_token').json({ message: 'Logged out' })
+    return res.status(200).clearCookie('access_token').json({ message: 'Logged out' })
 }
 
 clientCtrl.protected = async (req, res) => {
