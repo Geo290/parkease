@@ -1,4 +1,4 @@
-require('dotenv').config();
+    require('dotenv').config();
 
 const adminModel = require('../models/admin.model.js');
 const { sign, verify } = require('jsonwebtoken');
@@ -102,3 +102,5 @@ adminCtrl.login = async (req, res) => {
         return res.status(500).json({ message: 'Error while logging in' });
     }
 }
+
+module.exports = adminCtrl;
