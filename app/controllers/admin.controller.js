@@ -52,33 +52,25 @@ adminCtrl.login = async (req, res) => {
         },
         `${process.env.SECRET_JWT_KEY}`,
         {
-            expiresIn: '10m'
+            expiresIn: '1d'
         }
     );
 
-    res
-        .cookie('admin_access_token', token, { // creating a cookie that stores data of the current user
-            httpOnly: true,  // the cookie is only accessed via HTTP protocol
-            //secure:  , // The cookie is only via HTTPS protocol
-            // sameSite: 'strict', // cookie is only accessed in the same domain
-            maxAge: 1000 * 60 * 60
-        })
-
-    return res.status(200).json({ message: 'Successfully logged in' });
+    return res.status(200).json({ message: 'Successfully logged in', auth : true, token });
 }
 
 adminCtrl.logout = async (req, res) => {
-    const { admin } = req.session;
+    const { admin } = req;
     if(!admin) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
     
-    return res.status(200).clearCookie('admin_access_token').json({ message: 'Logged out' });
+    return res.status(200).clearCookie('admin_access_token').json({ message: 'Logged out (not really)' });
 }
 
 //list
 adminCtrl.listAll = async (req, res) => {
-    const { admin } = req.session;
+    const { admin } = req;
     if(!admin) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
@@ -92,7 +84,7 @@ adminCtrl.listAll = async (req, res) => {
 }
 
 adminCtrl.updateAdmin = async (req, res) => {
-    const { admin } = req.session;
+    const { admin } = req;
     const { email } = req.params;
     const data = req.body;
 
@@ -117,7 +109,7 @@ adminCtrl.updateAdmin = async (req, res) => {
 
 //Delete
 adminCtrl.deleteAdmin = async (req, res) => {
-    const { admin } = req.session;
+    const { admin } = req;
     const { email } = req.params;
 
     if (!admin) {
