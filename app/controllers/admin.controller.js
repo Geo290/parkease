@@ -1,106 +1,144 @@
-    require('dotenv').config();
+require('dotenv').config();
 
 const adminModel = require('../models/admin.model.js');
-const { sign, verify } = require('jsonwebtoken');
+const { sign } = require('jsonwebtoken');
 
 const adminCtrl = {};
 
 //Sign Up
 adminCtrl.signup = async (req, res) => {
+    const data = req.body;
+    const { email } = req.body;
+
+    const emailAlreadyExists = await adminModel.findOne({email});
+    if (emailAlreadyExists) {
+        return res.status(409).json({ message: 'Email already exists!'})
+    }
+
     try {
-        const data = req.body;
         const admin = new adminModel(data);
-
         admin.password = await admin.encryptPassword(admin.password);
-
+        
         await admin.save();
-
         return res.status(200).json({ message: 'Signed Up successfully' });
 
-    } catch (error) {
+    } catch {
         return res.status(500).json({ message: 'Error while signing up' });
     }
 };
 
-//Update 
-adminCtrl.updateAdmin = async (req, res) => {
-    try {
-        const { names } = req.query;
-        const resp = await adminModel.findOne({ names });
+//LOGIN
+adminCtrl.login = async (req, res) => {
+    const { email, password } = req.body;
+    
+    const admin = await adminModel.findOne({ email });
+    if (!admin) {
+        return res.status(204).json({ message: 'No items found' });
+    }
 
-        if (!resp) {
-            return messageGeneral(res, 404, false, "", "Record not found");
+    const isValidPass = await admin.validatePassword(password);
+    if (!isValidPass) {
+        return res.status(401).json({
+            message: 'Invalid password'
+        });
+    }
+
+    const token = sign(
+        {
+            id: admin._id,
+            email: admin.email,
+            names: admin.names,
+            lastnames: admin.lastnames
+        },
+        `${process.env.SECRET_JWT_KEY}`,
+        {
+            expiresIn: '10m'
         }
-        await resp.updateOne(req.body);
-        messageGeneral(res, 200, true, "", "Updated record");
+    );
+
+    res
+        .cookie('admin_access_token', token, { // creating a cookie that stores data of the current user
+            httpOnly: true,  // the cookie is only accessed via HTTP protocol
+            //secure:  , // The cookie is only via HTTPS protocol
+            // sameSite: 'strict', // cookie is only accessed in the same domain
+            maxAge: 1000 * 60 * 60
+        })
+
+    return res.status(200).json({ message: 'Successfully logged in' });
+}
+
+adminCtrl.logout = async (req, res) => {
+    const { admin } = req.session;
+    if(!admin) {
+        return res.status(401).json({ message: 'Unauthorized!' });
+    }
+    
+    return res.status(200).clearCookie('admin_access_token').json({ message: 'Logged out' });
+}
+
+//list
+adminCtrl.listAll = async (req, res) => {
+    const { admin } = req.session;
+    if(!admin) {
+        return res.status(401).json({ message: 'Unauthorized!' });
+    }
+
+    try{
+        const resp = await adminModel.find();
+        return res.status(200).json(resp)
+    } catch {
+        return res.status(500).json({ message: 'Failure!' });
+    }
+}
+
+adminCtrl.updateAdmin = async (req, res) => {
+    const { admin } = req.session;
+    const { email } = req.params;
+    const data = req.body;
+
+    if (!admin) {
+        return res.status(401).json({ message: 'Unauthorized!' });
+    }
+
+    const resp = await adminModel.findOne(email);
+    if (!resp) {
+        return res.status(204).json({ message: 'No items found'});
+    }
+
+    try {
+        await resp.updateOne(data);
+        return res.status(200).json({ message: 'Success!' });
 
     } catch (error) {
-        messageGeneral(res, 500, false, "", error.message);
+        console.log(error) 
+        return res.status(500).json({ message: 'Failure!' });
     }
 }
 
 //Delete
 adminCtrl.deleteAdmin = async (req, res) => {
+    const { admin } = req.session;
+    const { email } = req.params;
+
+    if (!admin) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const resp = await adminModel.findOne(email);
+    if (!resp) {
+        return res.status(204).json({ message: 'No items found' });
+    }
+
     try {
-        const { names } = req.query;
-        const resp = await adminModel.findOne({ names });
-
-        if (!resp) {
-            return messageGeneral(res, 404, false, "", "Record not found");
-        }
-
         await resp.deleteOne();
-        messageGeneral(res, 200, true, "", "Delete record");
+        return res.status(200).json({ message: "Success!" });
 
     } catch (error) {
-        messageGeneral(res, 500, false, "", error.message);
+        console.log(error);
+         
+        return res.status(500).json({ message: 'Failure!' });
     }
 }
 
-//LOGIN
-adminCtrl.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const admin = await adminModel.findOne({ email: email });
-        const isValidPass = await admin.validatePassword(password)
-
-        if (!admin) {
-            return res.status(204).json({ message: 'No items found' });
-        }
-        if (!isValidPass) {
-            return res.status(401).json({
-                message: 'Invalid password'
-            });
-        }
-
-        const token = sign(
-            {
-                id: admin._id,
-                email: admin.email,
-                names: admin.names,
-                lastnames: admin.lastnames
-            },
-            `${process.env.SECRET_JWT_KEY}`,
-            {
-                expiresIn: '10m'
-            }
-        );
-
-        res
-            .cookie('access_token', token, { // creating a cookie that stores data of the current user
-                httpOnly: true,  // the cookie is only accessed via HTTP protocol
-                //secure:  , // The cookie is only via HTTPS protocol
-                sameSite: 'strict', // cookie is only accessed in the same domain
-                maxAge: 1000 * 60 * 60
-            })
-            .send({ admin, token });
-
-        // return res.status(200).json({ message: 'Successfully logged in' });
-
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: 'Error while logging in' });
-    }
-}
 
 module.exports = adminCtrl;

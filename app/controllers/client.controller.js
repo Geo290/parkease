@@ -6,20 +6,22 @@ const { sign } = require('jsonwebtoken');
 const clientCtrl = {};
 
 clientCtrl.signup = async (req, res) => {
+    const data = req.body;
+    const email = data.email;
+    const emailAlreadyExits = await clientModel.findOne(email);
+
+    if (emailAlreadyExits) {
+        return res.status(409).json({ message: "Email already exists" });
+    }
+
     try {
-        const data = req.body;
-        const email = data.email;
-        const emailAlreadyExits = await clientModel.findOne(email);
-
-        if (emailAlreadyExits) return res.status(409).json({ message: "Email already exists" });
-
         const client = new clientModel(data);
         client.password = await client.encryptPassword(client.password);
-        await client.save();    
+        await client.save();
 
         return res.status(200).json({ message: 'Signed Up successfully' });
 
-    } catch (error) {
+    } catch {
         return res.status(500).json({ message: 'Error while signing up' });
     }
 };
@@ -28,7 +30,7 @@ clientCtrl.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const client = await clientModel.findOne({ email: email });
-        const isValidPass = await client.validatePassword(password)
+        const isValidPass = await client.validatePassword(password);
 
         if (!client) {
             return res.status(204).json({ message: 'No items found' });
@@ -53,7 +55,7 @@ clientCtrl.login = async (req, res) => {
         );
 
         res
-            .cookie('access_token', token, { // creating a cookie that stores data of the current user
+            .cookie('user_access_token', token, { // creating a cookie that stores data of the current user
                 httpOnly: true,  // the cookie is only accessed via HTTP protocol
                 //secure:  , // The cookie is only via HTTPS protocol
                 sameSite: 'strict', // cookie is only accessed in the same domain
@@ -63,19 +65,26 @@ clientCtrl.login = async (req, res) => {
 
         // return res.status(200).json({ message: 'Successfully logged in' });
 
-    } catch (error) {
-        console.log(error)
+    } catch {
         return res.status(500).json({ message: 'Error while logging in' });
     }
 }
 
 clientCtrl.logout = async (req, res) => {
-    return res.status(200).clearCookie('access_token').json({ message: 'Logged out' })
+    const { user } = req.session;
+    if (!user) {
+        return res.status(401).json({ messag: 'Unauthorized' });
+    }
+
+    return res.status(200).clearCookie('user_access_token').json({ message: 'Logged out' })
 }
 
 clientCtrl.protected = async (req, res) => {
     const { user } = req.session;
-    if (!user) return res.status(401).json({ message: 'Unauthorized' });
+    if (!user) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     return res.status(200).json({ message: `Welcome ${user.names}` });
 }
 module.exports = clientCtrl;

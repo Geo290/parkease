@@ -1,13 +1,13 @@
 const {Router} = require('express');
 const clientCtrl = require('../controllers/client.controller');
-const verifyToken = require('../middlewares/verifyToken');
+const verifyUserToken = require('../middlewares/verifyUserToken');
 
 const router = Router();
 
 router
     .post("/signup", clientCtrl.signup)
     .post("/login", clientCtrl.login)
-    .post("/logout", clientCtrl.logout)
-    .get('/protected', verifyToken, clientCtrl.protected)
+    .post("/logout", verifyUserToken, clientCtrl.logout)
+    .get('/protected', verifyUserToken, clientCtrl.protected);
 
 module.exports = router;

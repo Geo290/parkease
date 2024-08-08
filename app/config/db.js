@@ -5,15 +5,12 @@ const { connect, disconnect } = require('mongoose');
 const USER = process.env.DB_USERNAME;
 const PASS = process.env.DB_PASSKEY;
 const DB = process.env.DB_NAME;
-const URI = `mongodb+srv://${USER}:${PASS}@cluster0.8puqbr9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+// const URI = `mongodb+srv://${USER}:${PASS}@cluster0.8puqbr9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const URI = 'mongodb://localhost:27017';
 
 const run = async () => {
     try {
-        await connect(URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            dbName: DB
-        });
+        await connect(URI, { dbName: DB });
 
         console.log("App connected to server");
 

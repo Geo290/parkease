@@ -1,15 +1,16 @@
 const { Router } = require('express');
 const membershipCtrl = require("../controllers/membership.controller.js");
-const verifyToken = require('../middlewares/verifyToken.js');
+const verifyAdminToken = require('../middlewares/verifyAdminToken.js');
+const verifyUserToken = require('../middlewares/verifyUserToken.js');
 
 const router = Router();
 
 router
-    .post('/new/', verifyToken, membershipCtrl.createMembership)
-    .get('/list', verifyToken, membershipCtrl.getAllMemberships)
-    .get('/list/by-id/:id', verifyToken, membershipCtrl.getAllMembershipById)
-    .put('/update/:id', verifyToken, membershipCtrl.updateAllMembershipById)
-    .delete('/delete/:id', verifyToken, membershipCtrl.deleteAllMembershipById)
+    .post('/new/', verifyUserToken, membershipCtrl.createMembership)
+    .get('/list', verifyAdminToken, membershipCtrl.getAllMemberships)
+    .get('/list/by-email/:email?', verifyAdminToken, membershipCtrl.getMembership)
+    .put('/update/:email?', verifyUserToken, membershipCtrl.updateMembership)
+    .delete('/delete/:email?', verifyUserToken, membershipCtrl.deleteMembership);
 
 
 // == == == THIS IS CALLED WHITE LIST == == ==
