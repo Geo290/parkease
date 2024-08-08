@@ -31,7 +31,7 @@ membershipCtrl.createMembership = async (req, res) => {
 
 //Get all memberships
 membershipCtrl.getAllMemberships = async (req, res) => {
-    const { admin } = req.session;
+    const { admin } = req;
     if (!admin) {
         return res.status(401).json({ message: "Unauthorized" });
     };
@@ -46,7 +46,7 @@ membershipCtrl.getAllMemberships = async (req, res) => {
 
 //Get a membership by ID
 membershipCtrl.getMembership = async (req, res) => {
-    const { admin } = req.session;
+    const { admin } = req;
     const { email } = req.params;
 
     if (!admin) {
@@ -63,7 +63,7 @@ membershipCtrl.getMembership = async (req, res) => {
 
 //Update a membership by ID
 membershipCtrl.updateMembership = async (req, res) => {
-    const { user } = req.session;
+    const { user } = req;
     const { email } = req.params;
     const data = req.body;
 
@@ -86,7 +86,7 @@ membershipCtrl.updateMembership = async (req, res) => {
 
 //Delete a membership by ID
 membershipCtrl.deleteMembership = async (req, res) => {
-    const { user } = req.session;
+    const { user } = req;
     const { email } = req.params;
 
     if (!user) {
