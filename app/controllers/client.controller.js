@@ -27,64 +27,51 @@ clientCtrl.signup = async (req, res) => {
 };
 
 clientCtrl.login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const client = await clientModel.findOne({ email: email });
-        const isValidPass = await client.validatePassword(password);
+    const { email, password } = req.body;
+    const client = await clientModel.findOne({ email: email });
+    const isValidPass = await client.validatePassword(password);
 
-        if (!client) {
-            return res.status(204).json({ message: 'No items found' });
-        }
-        if (!isValidPass) {
-            return res.status(401).json({
-                message: 'Invalid password'
-            });
-        }
-
-        const token = sign(
-            {
-                id: client._id,
-                email: client.email,
-                names: client.names,
-                lastnames: client.lastnames
-            },
-            `${process.env.SECRET_JWT_KEY}`,
-            {
-                expiresIn: '10m'
-            }
-        );
-
-        res
-            .cookie('user_access_token', token, { // creating a cookie that stores data of the current user
-                httpOnly: true,  // the cookie is only accessed via HTTP protocol
-                //secure:  , // The cookie is only via HTTPS protocol
-                sameSite: 'strict', // cookie is only accessed in the same domain
-                maxAge: 1000 * 60 * 60
-            })
-            .send({ client, token });
-
-        // return res.status(200).json({ message: 'Successfully logged in' });
-
-    } catch {
-        return res.status(500).json({ message: 'Error while logging in' });
+    if (!client) {
+        return res.status(204).json({ message: 'No items found' });
     }
+    if (!isValidPass) {
+        return res.status(401).json({
+            message: 'Invalid password'
+        });
+    }
+
+    const token = sign(
+        {
+            id: client._id,
+            email: client.email,
+            names: client.names,
+            lastnames: client.lastnames
+        },
+        `${process.env.SECRET_JWT_KEY}`,
+        {
+            expiresIn: '1d'
+        }
+    );
+
+    return res.status(200).json({ message: 'Successfully logged in', auth: true, token });
 }
 
 clientCtrl.logout = async (req, res) => {
-    const { user } = req.session;
-    if (!user) {
-        return res.status(401).json({ messag: 'Unauthorized' });
-    }
-
-    return res.status(200).clearCookie('user_access_token').json({ message: 'Logged out' })
-}
-
-clientCtrl.protected = async (req, res) => {
-    const { user } = req.session;
-    if (!user) {
+    const { client } = req;
+    if (!client) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    return res.status(200).json({ message: `Welcome ${user.names}` });
+    return res.status(200).clearCookie('user_access_token').json({ message: 'Logged out (not really)' })
 }
+
+clientCtrl.protected = async (req, res) => {
+    const { email, names, lastnames } = req.client;
+    if (!email) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    return res.status(200).json({ message: `Welcome ${names} ${lastnames}` });
+}
+
 module.exports = clientCtrl;
