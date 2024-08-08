@@ -24,16 +24,16 @@
 
 ### 1. CLIENTS
 
-> **- Base URL:** /api/v1/client
-> **- headers:** {
+> **<li> Base URL:** /api/v1/client
+> **<li> headers:** {
 >   user-access-token: JWT
 > }
 
 #### <li>SIGNUP
 
-> **- Method:** POST
-> **- Endpoint:** /signup
-> **- Params:** {
+> **<li> Method:** POST
+> **<li> Endpoint:** /signup
+> **<li> Params:** {
 > names: string,
 > lastnames: string,
 > email: string,
@@ -41,76 +41,76 @@
 > birthDay: string,
 > password: string
 > }
-> **- Authorization:** None
+> **<li> Authorization:** None
 
 #### <li>LOGIN
 
-> **- Method:** POST
-> **- Endpoint:** /login
-> **- Params:** {
+> **<li> Method:** POST
+> **<li> Endpoint:** /login
+> **<li> Params:** {
 > email: string,
 > password: string
 > }
-**- Authorization:** None
+**<li> Authorization:** None
 
 #### <li>LOGOUT
 
-> **- Method:** POST
-> **- Endpoint:** /login
-> **- Params:** {
+> **<li> Method:** POST
+> **<li> Endpoint:** /login
+> **<li> Params:** {
 > email: string,
 > password: string
 > }
-**- Authorization:** user-access-token
+**<li> Authorization:** user-access-token
 
 <!-->
 #### <li>LIST ALL
 
-> **- Method:** GET
-> **- Endpoint:** /list
-> **- Params:** {}
-**- Authorization:** admin-access-token
+> **<li> Method:** GET
+> **<li> Endpoint:** /list
+> **<li> Params:** {}
+**<li> Authorization:** admin-access-token
 
 #### <li>GET ONE
 
-> **- Method:** GET
-> **- Endpoint:** /get-by/email/:email?
-> **- Params:** {
+> **<li> Method:** GET
+> **<li> Endpoint:** /get-by/email/:email?
+> **<li> Params:** {
 > email: string
 > }
-**- Authorization:** admin-access-token
+**<li> Authorization:** admin-access-token
 #### <li>UPDATE
 
-> **- Method:** PUT
-> **- Endpoint:** /update/:email?
-> **- Params:** {
+> **<li> Method:** PUT
+> **<li> Endpoint:** /update/:email?
+> **<li> Params:** {
 > email: string
 > }
-> **- Authorization:** admin-access-token
+> **<li> Authorization:** admin-access-token
 
 #### <li>DELETE
 
-> **- Method:** DELETE
-> **- Endpoint:** /delete/:email?
-> **- Params:** {
+> **<li> Method:** DELETE
+> **<li> Endpoint:** /delete/:email?
+> **<li> Params:** {
 > email: string
 > }
-**- Authorization:** admin-access-token
+**<li> Authorization:** admin-access-token
 <!-->
 
 ### 2. <u>MEMBERSHIPS</u>
 
-> **- Base URL:** /api/v1/membership
-> **- headers:** {
+> **<li> Base URL:** /api/v1/membership
+> **<li> headers:** {
 >   user-access-token: JWT,
 >   admin-access-token: JWT
 > }
 
 #### <li>CREATE
 
-> **- Method:** POST
-> **- Endpoint:** /new
-> **- Params:** {
+> **<li> Method:** POST
+> **<li> Endpoint:** /new
+> **<li> Params:** {
 > client: object,
 > vehicle: {
 > plateNumber: string,
@@ -126,96 +126,96 @@
 
 #### <li>LIST ALL
 
-> **- Method:** GET
-> **- Endpoint:** /list
-> **- Params:** {}
-> **- Authorization:** admin-access-token
+> **<li> Method:** GET
+> **<li> Endpoint:** /list
+> **<li> Params:** {}
+> **<li> Authorization:** admin-access-token
 
 #### <li>GET ONE
 
-> **- Method:** GET
-> **- Endpoint:** /list-by/email/:email?
-> **- Params:** {
+> **<li> Method:** GET
+> **<li> Endpoint:** /list-by/email/:email?
+> **<li> Params:** {
 > email: string
-> }> **- Authorization:** admin-access-token
+> }> **<li> Authorization:** admin-access-token
 
 #### <li>UPDATE
 
-> **- Method:** PUT
-> **- Endpoint:** /update/:email?
-> **- Params:** {
+> **<li> Method:** PUT
+> **<li> Endpoint:** /update/:email?
+> **<li> Params:** {
 > email: string
 > }
-> **- Authorization:** user-access-token
+> **<li> Authorization:** user-access-token
 > 
 #### <li>DELETE
 
-> **- Method:** DELETE
-> **- Endpoint:** /delete/:email?
-> **- Params:** {
+> **<li> Method:** DELETE
+> **<li> Endpoint:** /delete/:email?
+> **<li> Params:** {
 > email: string
 > }
-> **- Authorization:** user-access-token
+> **<li> Authorization:** user-access-token
 > 
 ### 3. <u>ADMINISTRATORS</u>
 
-> **- Base URL:** /api/v1/admin
-> **- headers:** {
+> **<li> Base URL:** /api/v1/admin
+> **<li> headers:** {
 >   admin-access-token: JWT
 > }
 
 #### <li>SIGNUP
 
-> **- Method:** POST
-> **- Endpoint:** /signup
-> **- Params:** {
+> **<li> Method:** POST
+> **<li> Endpoint:** /signup
+> **<li> Params:** {
 > names: string,
 > lastnames: string,
 > email: string,
 > phoneNumber: number,
 > password: string
 > }
-> **- Authorization:** admin-access-token
+> **<li> Authorization:** admin-access-token
 > 
 #### <li>LOGIN
 
-> **- Method:** POST
-> **- Endpoint:** /login
-> **- Params:** {
+> **<li> Method:** POST
+> **<li> Endpoint:** /login
+> **<li> Params:** {
 > names: string,
 > password: string
 > }
-> **- Authorization:** None
+> **<li> Authorization:** None
 
 #### <li>LOGOUT
-> **- Method:** POST
-> **- Endpoint:** /logout
-> **- Params:** {}
-> **- Authorization:** admin-access-token
+> **<li> Method:** POST
+> **<li> Endpoint:** /logout
+> **<li> Params:** {}
+> **<li> Authorization:** admin-access-token
 
 #### LIST ALL
 
-> **- Method:** GET
-> **- Endpoint:** /list
-> **- Params:** {
+> **<li> Method:** GET
+> **<li> Endpoint:** /list
+> **<li> Params:** {
 > }
-> **- Authorization:** admin-access-token
+> **<li> Authorization:** admin-access-token
 
 #### UPDATE
 
-> **- Method:** PUT
-> **- Endpoint:** /update/:email?
-> **- Params:** {
+> **<li> Method:** PUT
+> **<li> Endpoint:** /update/:email?
+> **<li> Params:** {
 > email: string
 > }
-> **- Authorization:** admin-access-token
+> **<li> Authorization:** admin-access-token
 
 #### DELETE
 
-> **- Method:** DELETE
-> **- Endpoint:** /delete/:email?
-> **- Params:** {
+> **<li> Method:** DELETE
+> **<li> Endpoint:** /delete/:email?
+> **<li> Params:** {
 > email: string
 > }
-> **- Authorization:** admin-access-token
+> **<li> Authorization:** admin-access-token
 > 
