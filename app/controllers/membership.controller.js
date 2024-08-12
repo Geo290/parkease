@@ -4,7 +4,7 @@ const membershipCtrl = {};
 
 //Create 
 membershipCtrl.createMembership = async (req, res) => {
-    const { user } = req.session;
+    const { user } = req;
     if (!user) {
         return res.status(401).json({ message: "Unauthorized" });
     };
@@ -31,8 +31,8 @@ membershipCtrl.createMembership = async (req, res) => {
 
 //Get all memberships
 membershipCtrl.getAllMemberships = async (req, res) => {
-    const { admin } = req;
-    if (!admin) {
+    const { user } = req;
+    if (!user || !user.isAdmin) {
         return res.status(401).json({ message: "Unauthorized" });
     };
 
@@ -46,11 +46,11 @@ membershipCtrl.getAllMemberships = async (req, res) => {
 
 //Get a membership by ID
 membershipCtrl.getMembership = async (req, res) => {
-    const { admin } = req;
+    const { user } = req;
     const { email } = req.params;
 
-    if (!admin) {
-        return res.status(401).json({ message: "Unauthorized" });
+    if (!user || !user.isAdmin) {
+        return res.status(401).json({ message: "Unauthorized!" });
     };
 
     try {
@@ -68,12 +68,12 @@ membershipCtrl.updateMembership = async (req, res) => {
     const data = req.body;
 
     if (!user) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "Unauthorized!" });
     };
 
     const resp = await membershipModel.findOne({ email: email });
     if (!resp) {
-        return res.status(404).json({ message: 'No items found' })
+        return res.status(404).json({ message: 'No items found!' })
     };
 
     try {
@@ -90,12 +90,12 @@ membershipCtrl.deleteMembership = async (req, res) => {
     const { email } = req.params;
 
     if (!user) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "Unauthorized!" });
     };
 
     const resp = await membershipModel.findOne({ email: email });
     if (!resp) {
-        return res.status(404).json({ message: 'No items found' })
+        return res.status(404).json({ message: 'No items found!' })
     };
 
     try {

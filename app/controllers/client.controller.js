@@ -8,7 +8,7 @@ const clientCtrl = {};
 clientCtrl.signup = async (req, res) => {
     const data = req.body;
     const email = data.email;
-    const emailAlreadyExits = await clientModel.findOne({email: email});
+    const emailAlreadyExits = await clientModel.findOne({ email: email });
 
     if (emailAlreadyExits) {
         return res.status(409).json({ message: "Email already exists" });
@@ -28,12 +28,13 @@ clientCtrl.signup = async (req, res) => {
 
 clientCtrl.login = async (req, res) => {
     const { email, password } = req.body;
-    const client = await clientModel.findOne({ email: email });
-    const isValidPass = await client.validatePassword(password);
 
+    const client = await clientModel.findOne({ email: email });
     if (!client) {
         return res.status(204).json({ message: 'No items found' });
     }
+    
+    const isValidPass = await client.validatePassword(password);
     if (!isValidPass) {
         return res.status(401).json({
             message: 'Invalid password'

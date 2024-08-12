@@ -10,15 +10,15 @@ adminCtrl.signup = async (req, res) => {
     const data = req.body;
     const { email } = req.body;
 
-    const emailAlreadyExists = await adminModel.findOne({email});
+    const emailAlreadyExists = await adminModel.findOne({ email: email });
     if (emailAlreadyExists) {
-        return res.status(409).json({ message: 'Email already exists!'})
+        return res.status(409).json({ message: 'Email already exists!' })
     }
 
     try {
         const admin = new adminModel(data);
         admin.password = await admin.encryptPassword(admin.password);
-        
+
         await admin.save();
         return res.status(200).json({ message: 'Signed Up successfully' });
 
@@ -30,8 +30,8 @@ adminCtrl.signup = async (req, res) => {
 //LOGIN
 adminCtrl.login = async (req, res) => {
     const { email, password } = req.body;
-    
-    const admin = await adminModel.findOne({ email });
+
+    const admin = await adminModel.findOne({ email: email });
     if (!admin) {
         return res.status(204).json({ message: 'No items found' });
     }
@@ -48,7 +48,8 @@ adminCtrl.login = async (req, res) => {
             id: admin._id,
             email: admin.email,
             names: admin.names,
-            lastnames: admin.lastnames
+            lastnames: admin.lastnames,
+            isAdmin: true
         },
         `${process.env.SECRET_JWT_KEY}`,
         {
@@ -56,26 +57,26 @@ adminCtrl.login = async (req, res) => {
         }
     );
 
-    return res.status(200).json({ message: 'Successfully logged in', auth : true, token });
+    return res.status(200).json({ message: 'Successfully logged in', auth: true, token });
 }
 
 adminCtrl.logout = async (req, res) => {
-    const { admin } = req;
-    if(!admin) {
+    const { user } = req;
+    if (!user || !user.isAdmin) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
-    
+
     return res.status(200).clearCookie('admin_access_token').json({ message: 'Logged out (not really)' });
 }
 
 //list
 adminCtrl.listAll = async (req, res) => {
-    const { admin } = req;
-    if(!admin) {
+    const { user } = req;
+    if (!user || !user.isAdmin) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
 
-    try{
+    try {
         const resp = await adminModel.find();
         return res.status(200).json(resp)
     } catch {
@@ -84,17 +85,17 @@ adminCtrl.listAll = async (req, res) => {
 }
 
 adminCtrl.updateAdmin = async (req, res) => {
-    const { admin } = req;
+    const { user } = req;
     const { email } = req.params;
     const data = req.body;
 
-    if (!admin) {
+    if (!user || !user.isAdmin) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
 
     const resp = await adminModel.findOne(email);
     if (!resp) {
-        return res.status(204).json({ message: 'No items found'});
+        return res.status(204).json({ message: 'No items found' });
     }
 
     try {
@@ -102,17 +103,17 @@ adminCtrl.updateAdmin = async (req, res) => {
         return res.status(200).json({ message: 'Success!' });
 
     } catch (error) {
-        console.log(error) 
+        console.log(error)
         return res.status(500).json({ message: 'Failure!' });
     }
 }
 
 //Delete
 adminCtrl.deleteAdmin = async (req, res) => {
-    const { admin } = req;
+    const { user } = req;
     const { email } = req.params;
 
-    if (!admin) {
+    if (!user || !user.isAdmin) {
         return res.status(401).json({ message: "Unauthorized" });
     }
 
@@ -127,7 +128,7 @@ adminCtrl.deleteAdmin = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-         
+
         return res.status(500).json({ message: 'Failure!' });
     }
 }
