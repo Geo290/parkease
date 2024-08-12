@@ -27,7 +27,7 @@ const stop = async (server) => {
     try {
         await disconnect();
         console.log("App successfully disconnected from DB");
-        proces.exit(0);
+        process.exit(0);
 
     } catch (error) {
         console.error("Error while disconnecting from DB: ", error);
