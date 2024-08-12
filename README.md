@@ -26,7 +26,7 @@
 
 > **<li> Base URL:** /api/v1/client
 > **<li> headers:** {
->   user-access-token: JWT
+>   Authorization: JWT
 > }
 
 #### <li>SIGNUP
@@ -41,7 +41,7 @@
 > birthDay: string,
 > password: string
 > }
-> **<li> Authorization:** None
+> **<li> Authorization Headers:** None
 
 #### <li>LOGIN
 
@@ -51,7 +51,7 @@
 > email: string,
 > password: string
 > }
-**<li> Authorization:** None
+**<li> Authorization Headers:** None
 
 #### <li>LOGOUT
 
@@ -61,7 +61,7 @@
 > email: string,
 > password: string
 > }
-**<li> Authorization:** user-access-token
+**<li> Authorization Headers:** Authorization: Bearer Token
 
 <!-->
 #### <li>LIST ALL
@@ -69,7 +69,7 @@
 > **<li> Method:** GET
 > **<li> Endpoint:** /list
 > **<li> Params:** {}
-**<li> Authorization:** admin-access-token
+**<li> Authorization Headers:** Authorization: Bearer Token
 
 #### <li>GET ONE
 
@@ -78,7 +78,7 @@
 > **<li> Params:** {
 > email: string
 > }
-**<li> Authorization:** admin-access-token
+**<li> Authorization Headers:** Authorization: Bearer Token
 #### <li>UPDATE
 
 > **<li> Method:** PUT
@@ -86,7 +86,7 @@
 > **<li> Params:** {
 > email: string
 > }
-> **<li> Authorization:** admin-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 
 #### <li>DELETE
 
@@ -95,15 +95,15 @@
 > **<li> Params:** {
 > email: string
 > }
-**<li> Authorization:** admin-access-token
+**<li> Authorization Headers:** Authorization: Bearer Token
 <!-->
 
 ### 2. <u>MEMBERSHIPS</u>
 
 > **<li> Base URL:** /api/v1/membership
 > **<li> headers:** {
->   user-access-token: JWT,
->   admin-access-token: JWT
+>   Authorization: JWT,
+>   Authorization: JWT
 > }
 
 #### <li>CREATE
@@ -129,7 +129,7 @@
 > **<li> Method:** GET
 > **<li> Endpoint:** /list
 > **<li> Params:** {}
-> **<li> Authorization:** admin-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 
 #### <li>GET ONE
 
@@ -137,7 +137,7 @@
 > **<li> Endpoint:** /list-by/email/:email?
 > **<li> Params:** {
 > email: string
-> }> **<li> Authorization:** admin-access-token
+> }> **<li> Authorization Headers:** Authorization: Bearer Token
 
 #### <li>UPDATE
 
@@ -146,7 +146,7 @@
 > **<li> Params:** {
 > email: string
 > }
-> **<li> Authorization:** user-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 > 
 #### <li>DELETE
 
@@ -155,13 +155,13 @@
 > **<li> Params:** {
 > email: string
 > }
-> **<li> Authorization:** user-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token 
 > 
 ### 3. <u>ADMINISTRATORS</u>
 
 > **<li> Base URL:** /api/v1/admin
 > **<li> headers:** {
->   admin-access-token: JWT
+>   Authorization: JWT
 > }
 
 #### <li>SIGNUP
@@ -175,7 +175,7 @@
 > phoneNumber: number,
 > password: string
 > }
-> **<li> Authorization:** admin-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 > 
 #### <li>LOGIN
 
@@ -185,13 +185,13 @@
 > names: string,
 > password: string
 > }
-> **<li> Authorization:** None
+> **<li> Authorization Headers:** None
 
 #### <li>LOGOUT
 > **<li> Method:** POST
 > **<li> Endpoint:** /logout
 > **<li> Params:** {}
-> **<li> Authorization:** admin-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 
 #### LIST ALL
 
@@ -199,7 +199,7 @@
 > **<li> Endpoint:** /list
 > **<li> Params:** {
 > }
-> **<li> Authorization:** admin-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 
 #### UPDATE
 
@@ -208,7 +208,7 @@
 > **<li> Params:** {
 > email: string
 > }
-> **<li> Authorization:** admin-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 
 #### DELETE
 
@@ -217,5 +217,5 @@
 > **<li> Params:** {
 > email: string
 > }
-> **<li> Authorization:** admin-access-token
+> **<li> Authorization Headers:** Authorization: Bearer Token
 > 
