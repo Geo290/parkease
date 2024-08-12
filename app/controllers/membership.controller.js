@@ -25,7 +25,7 @@ membershipCtrl.createMembership = async (req, res) => {
 
         return res.status(201).json({ message: "Success!" });
     } catch {
-        return res.status(400).json({ message: 'Failure!'});
+        return res.status(400).json({ message: 'Failure!' });
     }
 }
 
@@ -36,11 +36,11 @@ membershipCtrl.getAllMemberships = async (req, res) => {
         return res.status(401).json({ message: "Unauthorized" });
     };
 
-    try{
+    try {
         const memberships = await membershipModel.find();
         return res.status(200).json(memberships);
     } catch {
-        return res.status(400).json({ message: 'Failure!'});
+        return res.status(400).json({ message: 'Failure!' });
     }
 }
 
@@ -54,10 +54,10 @@ membershipCtrl.getMembership = async (req, res) => {
     };
 
     try {
-        const resp = await membershipModel.findOne(email);
+        const resp = await membershipModel.findOne({ email: email });
         return res.status(200).json(resp);
     } catch {
-        return res.status(400).json({ message: 'Failure!'});
+        return res.status(400).json({ message: 'Failure!' });
     }
 }
 
@@ -70,17 +70,17 @@ membershipCtrl.updateMembership = async (req, res) => {
     if (!user) {
         return res.status(401).json({ message: "Unauthorized" });
     };
-    
-    const resp = await membershipModel.findOne(email);
+
+    const resp = await membershipModel.findOne({ email: email });
     if (!resp) {
         return res.status(404).json({ message: 'No items found' })
     };
 
     try {
         await resp.updateOne(data);
-        return res.status(200).json({ message: 'Success!'});  
+        return res.status(200).json({ message: 'Success!' });
     } catch {
-        return res.status(400).json({ message: 'Failure!'});
+        return res.status(400).json({ message: 'Failure!' });
     }
 }
 
@@ -93,7 +93,7 @@ membershipCtrl.deleteMembership = async (req, res) => {
         return res.status(401).json({ message: "Unauthorized" });
     };
 
-    const resp = await membershipModel.findOne(email);
+    const resp = await membershipModel.findOne({ email: email });
     if (!resp) {
         return res.status(404).json({ message: 'No items found' })
     };

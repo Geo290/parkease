@@ -8,7 +8,7 @@ const clientCtrl = {};
 clientCtrl.signup = async (req, res) => {
     const data = req.body;
     const email = data.email;
-    const emailAlreadyExits = await clientModel.findOne(email);
+    const emailAlreadyExits = await clientModel.findOne({email: email});
 
     if (emailAlreadyExits) {
         return res.status(409).json({ message: "Email already exists" });
