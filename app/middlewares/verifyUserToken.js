@@ -1,13 +1,13 @@
 const { verify } = require('jsonwebtoken');
 
 const verifyUserToken = (req, res, next) => {
-    const token = req.headers['user-access-token'];
+    const token = req.headers.authorization.split(" ")[1];
     if (!token) {
         return res.status(401).json({ message: 'No authorizarion token' });
     }
 
     const data = verify(token, process.env.SECRET_JWT_KEY);
-    req.client = data;
+    req.user = data;
 
     next();
 };
