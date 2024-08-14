@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
-// const morgan = require('morgan');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 const clientRoutes = require('./routes/client.routes');
@@ -15,7 +15,7 @@ const port = 4000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(morgan('dev'));
+app.use(cors());
 
 app.use('/api/v1/client', clientRoutes);
 app.use('/api/v1/membership', membershipRoutes);
