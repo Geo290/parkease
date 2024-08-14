@@ -58,8 +58,8 @@ clientCtrl.login = async (req, res) => {
 }
 
 clientCtrl.logout = async (req, res) => {
-    const { client } = req;
-    if (!client) {
+    const { user } = req;
+    if (!user) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
@@ -67,12 +67,12 @@ clientCtrl.logout = async (req, res) => {
 }
 
 clientCtrl.protected = async (req, res) => {
-    const { email, names, lastnames } = req.client;
-    if (!email) {
+    const { user } = req;
+    if (!user) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    return res.status(200).json({ message: `Welcome ${names} ${lastnames}` });
+    return res.status(200).json({ message: `Welcome ${user.names} ${user.lastnames}` });
 }
 
 module.exports = clientCtrl;
