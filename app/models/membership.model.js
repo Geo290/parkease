@@ -1,11 +1,11 @@
-const {Schema, model} = require('mongoose');
-const clientModel = require('./client.model');
+const { Schema, model } = require('mongoose');
+const userModel = require('./user.model');
 
 const MembershipSchema = new Schema({
     client: {
         _id: {
             type: Schema.Types.ObjectId,
-            ref: clientModel,
+            ref: userModel,
             required: true
         },
         names: {
@@ -43,7 +43,7 @@ const MembershipSchema = new Schema({
         type: Schema.Types.Boolean,
         reqiured: true
     }
-},  { timestamps: true }
+}, { timestamps: true }
 );
 
 const membershipModel = model('memberships', MembershipSchema);

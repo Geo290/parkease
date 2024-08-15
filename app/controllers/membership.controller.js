@@ -5,7 +5,7 @@ const membershipCtrl = {};
 //Create 
 membershipCtrl.createMembership = async (req, res) => {
     const { user } = req;
-    if (!user) {
+    if (!user || user.isAdmin) {
         return res.status(401).json({ message: "Unauthorized" });
     };
 

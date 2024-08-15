@@ -1,7 +1,7 @@
 const { Schema, model} = require('mongoose');
 const { genSalt, compare, hash } = require('bcryptjs');
 
-const ClientSchema = new Schema({
+const userSchema = new Schema({
     names: {
         type: Schema.Types.String,
         required: true
@@ -18,26 +18,28 @@ const ClientSchema = new Schema({
         type: Schema.Types.Number,
         required: true
     },
-    birthDay: {
+    password: {
         type: Schema.Types.String,
         required: true
     },
-    password: {
-        type: Schema.Types.String,
+    isAdmin : {
+        type: Schema.Types.Boolean,
+        default: false, 
         required: true
     }
 },  { timestamps: true }
 );
 
-ClientSchema.methods.encryptPassword = async (password) => {
+userSchema.methods.encryptPassword = async (password) => {
     const salt = await genSalt(10);
     return hash(password, salt);
 };
 
-ClientSchema.methods.validatePassword = function (password) {
+userSchema.methods.validatePassword = function (password) {
     return compare(password, this.password);
 };
 
-const clientModel = model('client', ClientSchema);
+const userModel = model('user', userSchema);
 
-module.exports = clientModel;
+module.exports = userModel;
+

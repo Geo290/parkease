@@ -3,10 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-
-const clientRoutes = require('./routes/client.routes');
 const membershipRoutes = require('./routes/memebership.routes');
-const adminRoutes = require('./routes/admin.routes');
+const userRoutes = require('./routes/user.routes');
 const { run, stop } = require('./config/db');
 
 const app = express();
@@ -17,9 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
-app.use('/api/v1/client', clientRoutes);
 app.use('/api/v1/membership', membershipRoutes);
-app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/user', userRoutes);
 
 run()
     .then(() => {
