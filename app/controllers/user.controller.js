@@ -234,4 +234,29 @@ userCtrl.logs = async (req, res) => {
         return res.status(500).json({ message: 'Failure!' });
     }
 };
+
+//create log
+userCtrl.createLog = async (req, res) => {
+    const { user } = req;
+    if (!user || !user.isAdmin) {
+        return res.status(401).json({ message: 'Unauthorized!' });
+    }
+
+    const { level, message } = req.body;
+
+    if (!level || !message) {
+        return res.status(400).json({ message: 'Missing log data' });
+    }
+
+    try {
+        const logData = { level, message };
+        const newLog = new logModel(logData);
+        await newLog.save();
+
+        return res.status(201).json({ message: 'Log created successfully' });
+    } catch (error) {
+        console.error('Error while creating log:', error);
+        return res.status(500).json({ message: 'Error while creating log' });
+    }
+};
 module.exports = userCtrl;
