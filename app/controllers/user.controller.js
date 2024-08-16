@@ -225,9 +225,13 @@ userCtrl.logs = async (req, res) => {
 
     try {
         const resp = await logModel.find();
+        if (resp.length === 0) {
+            return res.status(204).send(); // No content available
+        }
         return res.status(200).json(resp);
-    } catch {
+    } catch (error) {
+        console.error('Error fetching logs:', error);
         return res.status(500).json({ message: 'Failure!' });
     }
-}
+};
 module.exports = userCtrl;
