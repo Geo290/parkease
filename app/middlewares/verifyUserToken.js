@@ -6,10 +6,13 @@ const verifyUserToken = (req, res, next) => {
         return res.status(401).json({ message: 'No authorizarion token' });
     }
 
-    const data = verify(token, process.env.SECRET_JWT_KEY);
-    req.user = data;
-
-    next();
+    try {
+        const data = verify(token, process.env.SECRET_JWT_KEY);
+        req.user = data;
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid token' });
+    }
 };
 
 module.exports = verifyUserToken; // must import this middleware in routes files
