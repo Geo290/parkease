@@ -18,6 +18,14 @@ userCtrl.signup = async (req, res) => {
 
     try {
         const user = new userModel(data);
+
+        const logData = {
+            level: 'Info',
+            message: `${email} signed up successfully`
+        }
+        const newLog = new logModel(logData);
+        await newLog.save();
+
         user.password = await user.encryptPassword(user.password);
 
         await user.save();
@@ -57,8 +65,14 @@ userCtrl.login = async (req, res) => {
             expiresIn: '1d'
         }
     );
+    const logData = {
+        level: 'Info',
+        message: `User ${user.email} logged in successfully`
+    }
+    const newLog = new logModel(logData);
+    await newLog.save();
 
-    return res.status(200).json({ message: 'Successfully logged in', auth: true, isAdmin:user.isAdmin, token });
+    return res.status(200).json({ message: 'Successfully logged in', auth: true, isAdmin: user.isAdmin, token });
 }
 
 userCtrl.logout = async (req, res) => {
@@ -66,6 +80,13 @@ userCtrl.logout = async (req, res) => {
     if (!user) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
+
+    const logData = {
+        level: 'Info',
+        message: `User ${user.email} logged out successfully`
+    }
+    const newLog = new logModel(logData);
+    await newLog.save();
 
     return res.status(200).json({ message: 'Logged out' });
 }
@@ -89,6 +110,14 @@ userCtrl.createNewAdmin = async (req, res) => {
         const userAdmin = new userModel(data);
         userAdmin.password = await user.encryptPassword(userAdmin.password);
         await userAdmin.save();
+
+        const logData = {
+            level: 'Info',
+            message: `Admin ${user.email} added new admin ${userAdmin.email}`
+        }
+        const newLog = new logModel(logData);
+        await newLog.save();
+
         return res.status(200).json({ message: 'Signed Up successfully' });
 
     } catch {
@@ -105,6 +134,14 @@ userCtrl.listAll = async (req, res) => {
 
     try {
         const resp = await userModel.find();
+
+        const logData = {
+            level: 'Info',
+            message: `Admin ${user.email} listed all users`
+        }
+        const newLog = new logModel(logData);
+        await newLog.save();
+
         return res.status(200).json(resp);
 
     } catch {
@@ -116,7 +153,7 @@ userCtrl.updateUser = async (req, res) => {
     const { user } = req;
     const data = req.body;
     const { email } = req.params;
-    
+
     if (!user || !user.isAdmin) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
@@ -169,6 +206,14 @@ userCtrl.logs = async (req, res) => {
         if (resp.length === 0) {
             return res.status(204).send(); // No content available
         }
+
+        const logData = {
+            level: 'Info',
+            message: `Admin ${user.email} listed all logs`
+        }
+        const newLog = new logModel(logData);
+        await newLog.save();
+
         return res.status(200).json(resp);
     } catch (error) {
         console.error('Error fetching logs:', error);
