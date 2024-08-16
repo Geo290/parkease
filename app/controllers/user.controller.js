@@ -65,7 +65,7 @@ userCtrl.login = async (req, res) => {
     const newLog = new logModel(logData);
     await newLog.save();
 
-    return res.status(200).json({ message: 'Successfully logged in', auth: true, token });
+    return res.status(200).json({ message: 'Successfully logged in', auth: true, isAdmin:user.isAdmin, token });
 }
 
 userCtrl.logout = async (req, res) => {
