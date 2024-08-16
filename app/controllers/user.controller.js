@@ -202,7 +202,7 @@ userCtrl.logs = async (req, res) => {
     }
 
     try {
-        const resp = await logModel.find();
+        const resp = await logModel.find().sort({createdAt:-1});
         if (resp.length === 0) {
             return res.status(204).send(); // No content available
         }
