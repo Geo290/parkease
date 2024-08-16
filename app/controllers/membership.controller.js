@@ -1,5 +1,5 @@
 const membershipModel = require('../models/membership.model.js');
-
+const logModel = require('../models/log.model.js');
 const membershipCtrl = {};
 
 //Create 
@@ -23,6 +23,13 @@ membershipCtrl.createMembership = async (req, res) => {
         const newMembership = new membershipModel(membershipData);
         await newMembership.save();
 
+        const logData = {
+            level: 'Info',
+            message: `User ${user.email} became a member!`
+        }
+        const newLog = new logModel(logData);
+        await newLog.save();
+
         return res.status(201).json({ message: "Success!" });
     } catch {
         return res.status(400).json({ message: 'Failure!' });
@@ -37,8 +44,17 @@ membershipCtrl.getAllMemberships = async (req, res) => {
     };
 
     try {
-        const memberships = await membershipModel.find();
+        
+        const memberships = await membershipModel.find().sort({createdAt:-1});
+        const logData = {
+            level: 'Info',
+            message: `Admin ${user.email} listed all memberships`
+        }
+        const newLog = new logModel(logData);
+        await newLog.save();
+
         return res.status(200).json(memberships);
+
     } catch {
         return res.status(400).json({ message: 'Failure!' });
     }

@@ -133,7 +133,7 @@ userCtrl.listAll = async (req, res) => {
     }
 
     try {
-        const resp = await userModel.find();
+        const resp = await userModel.find().sort({createdAt:-1});
 
         const logData = {
             level: 'Info',
