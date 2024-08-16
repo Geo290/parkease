@@ -12,6 +12,6 @@ router
     .delete('/delete/:email?', verifyUserToken, userCtrl.deleteUser)
     .get('/list', verifyUserToken, userCtrl.listAll)
     .get('/logs', verifyUserToken, userCtrl.logs)
-    .post('/logs', verifyUserToken, userCtrl.createLog);
+    .post('/logs', userCtrl.createLog);
 
 module.exports = router;

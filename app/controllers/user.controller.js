@@ -58,13 +58,6 @@ userCtrl.login = async (req, res) => {
         }
     );
 
-    const logData = {
-        level: 'Info',
-        message: `User ${user.email} logged in successfully`
-    }
-    const newLog = new logModel(logData);
-    await newLog.save();
-
     return res.status(200).json({ message: 'Successfully logged in', auth: true, isAdmin:user.isAdmin, token });
 }
 
@@ -73,13 +66,6 @@ userCtrl.logout = async (req, res) => {
     if (!user) {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
-
-    const logData = {
-        level: 'Info',
-        message: `User ${user.email} logged out successfully`
-    }
-    const newLog = new logModel(logData);
-    await newLog.save();
 
     return res.status(200).json({ message: 'Logged out' });
 }
@@ -103,24 +89,9 @@ userCtrl.createNewAdmin = async (req, res) => {
         const userAdmin = new userModel(data);
         userAdmin.password = await user.encryptPassword(userAdmin.password);
         await userAdmin.save();
-
-        const logData = {
-            level: 'Info',
-            message: `Admin ${user.email} added ${userAdmin.email}`
-        }
-        const newLog = new logModel(logData);
-        await newLog.save();
-
         return res.status(200).json({ message: 'Signed Up successfully' });
+
     } catch {
-
-        const logData = {
-            level: 'Error',
-            message: `Error while amind ${user.email} added new admins`
-        }
-        const newLog = new logModel(logData);
-        await newLog.save();
-
         return res.status(500).json({ message: 'Error while creating new Admin' });
     }
 }
@@ -134,8 +105,8 @@ userCtrl.listAll = async (req, res) => {
 
     try {
         const resp = await userModel.find();
+        return res.status(200).json(resp);
 
-        return res.status(200).json(resp)
     } catch {
         return res.status(500).json({ message: 'Failure!' });
     }
@@ -157,24 +128,9 @@ userCtrl.updateUser = async (req, res) => {
 
     try {
         await resp.updateOne(data);
-
-        const logData = {
-            level: 'Info',
-            message: `Admin ${user.email} updated ${email} successfully`
-        }
-        const newLog = new logModel(logData);
-        await newLog.save();
-
         return res.status(200).json({ message: 'Success!' });
 
     } catch {
-        const logData = {
-            level: 'Error',
-            message: `Error while admin ${user.email} updated ${email}`
-        }
-        const newLog = new logModel(logData);
-        await newLog.save();
-
         return res.status(500).json({ message: 'Failure!' });
     }
 }
@@ -195,24 +151,9 @@ userCtrl.deleteUser = async (req, res) => {
 
     try {
         await resp.deleteOne();
-
-        const logData = {
-            level: 'Info',
-            message: `Admin ${user.email} deleted ${email} successfully`
-        }
-        const newLog = new logModel(logData);
-        await newLog.save();
-
         return res.status(200).json({ message: "Success!" });
 
     } catch {
-        const logData = {
-            level: 'Error',
-            message: `Error while admin ${user.email} deleted ${email}`
-        }
-        const newLog = new logModel(logData);
-        await newLog.save();
-
         return res.status(500).json({ message: 'Failure!' });
     }
 }
@@ -252,10 +193,9 @@ userCtrl.createLog = async (req, res) => {
         const logData = { level, message };
         const newLog = new logModel(logData);
         await newLog.save();
-
         return res.status(201).json({ message: 'Log created successfully' });
+
     } catch (error) {
-        console.error('Error while creating log:', error);
         return res.status(500).json({ message: 'Error while creating log' });
     }
 };
